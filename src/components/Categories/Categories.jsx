@@ -1,10 +1,25 @@
 import React, { useState, useEffect } from 'react'
-import { GiMeal, GiCroissant, GiCupcake, GiKnifeFork, GiBowlOfRice, GiChickenLeg } from 'react-icons/gi'
+import { 
+  GiMeal, GiCroissant, GiCupcake, GiKnifeFork, GiBowlOfRice, 
+  GiChickenLeg, GiHamburger, GiPizzaSlice, GiWaterBottle, GiCoffeeCup 
+} from 'react-icons/gi'
 import CategoryService from '../../api/categoryService'
+import ProductService from '../../api/productService'
 import './Categories.css'
 
-// Map of icon components by index for dynamic rendering
-const iconMap = [GiMeal, GiCroissant, GiCupcake, GiKnifeFork, GiBowlOfRice, GiChickenLeg]
+const getIconForCategory = (name) => {
+  if (!name) return GiMeal
+  const lowerName = name.toLowerCase()
+  if (lowerName.includes('burger') || lowerName.includes('sandwich')) return GiHamburger
+  if (lowerName.includes('pizza')) return GiPizzaSlice
+  if (lowerName.includes('drink') || lowerName.includes('beverage')) return GiWaterBottle
+  if (lowerName.includes('coffee') || lowerName.includes('cafe')) return GiCoffeeCup
+  if (lowerName.includes('dessert') || lowerName.includes('sweet') || lowerName.includes('cake')) return GiCupcake
+  if (lowerName.includes('chicken') || lowerName.includes('meat')) return GiChickenLeg
+  if (lowerName.includes('salad') || lowerName.includes('vegan') || lowerName.includes('healthy')) return GiBowlOfRice
+  if (lowerName.includes('breakfast') || lowerName.includes('bakery')) return GiCroissant
+  return GiMeal
+}
 const colorPalette = [
   { color: '#FF6B35', bgColor: '#FFF3ED' },
   { color: '#6366F1', bgColor: '#EEF2FF' },
@@ -26,8 +41,24 @@ const Categories = () => {
   const fetchCategories = async () => {
     try {
       setLoading(true)
-      const response = await CategoryService.getAllCategories()
-      setCategories(response.data || [])
+      const [catResponse, prodResponse] = await Promise.all([
+        CategoryService.getAllCategories(),
+        ProductService.getAllProducts()
+      ])
+      
+      const cats = catResponse.data || []
+      const prods = prodResponse.data || []
+      
+      // Calculate product counts
+      const categoriesWithCount = cats.map(cat => {
+        const count = prods.filter(p => p.category?.id === cat.id || p.category?.name === cat.name).length
+        return {
+          ...cat,
+          productCount: count
+        }
+      })
+      
+      setCategories(categoriesWithCount)
     } catch (err) {
       console.error('Error fetching categories:', err)
       setError('Failed to load categories')
@@ -69,7 +100,7 @@ const Categories = () => {
 
         <div className="categories__grid">
           {categories.map((category, index) => {
-            const IconComponent = iconMap[index % iconMap.length]
+            const IconComponent = getIconForCategory(category.name)
             const colors = colorPalette[index % colorPalette.length]
 
             return (
@@ -90,7 +121,7 @@ const Categories = () => {
                 </div>
                 <h3 className="category-card__name">{category.name}</h3>
                 <span className="category-card__count">
-                  {category.products?.length || 0} items
+                  {category.productCount || 0} items
                 </span>
               </div>
             )

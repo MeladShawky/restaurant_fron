@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext'
 import OrderService from '../../api/orderService'
 import ProductService from '../../api/productService'
 import { toast } from 'react-toastify'
+import SecureImage from '../SecureImage/SecureImage'
 import './CartDrawer.css'
 
 const CartDrawer = ({ isOpen, onClose }) => {
@@ -15,7 +16,7 @@ const CartDrawer = ({ isOpen, onClose }) => {
 
   const getItemImage = (item) => {
     if (item.product?.images && item.product.images.length > 0) {
-      return ProductService.getImageUrl(item.product.images[0].id)
+      return ProductService.getImageUrl(item.product.images[0].imageId || item.product.images[0].id)
     }
     return '/images/fattoush_salad_1777635117801.png'
   }
@@ -100,7 +101,7 @@ const CartDrawer = ({ isOpen, onClose }) => {
               ) : (
                 cartItems.map((item) => (
                   <div className="cart-item" key={item.id} id={`cart-item-${item.id}`}>
-                    <img
+                    <SecureImage
                       src={getItemImage(item)}
                       alt={item.product?.name}
                       className="cart-item__image"
@@ -131,7 +132,7 @@ const CartDrawer = ({ isOpen, onClose }) => {
                     </div>
                     <button
                       className="cart-item__remove"
-                      onClick={() => removeFromCart(item.id)}
+                      onClick={() => removeFromCart(item.product?.id)}
                       aria-label={`Remove ${item.product?.name}`}
                     >
                       <FiTrash2 />

@@ -3,6 +3,7 @@ import { FiChevronLeft, FiChevronRight, FiShoppingCart, FiStar, FiHeart } from '
 import ProductService from '../../api/productService'
 import { useCart } from '../../context/CartContext'
 import { useFavorites } from '../../context/FavoritesContext'
+import SecureImage from '../SecureImage/SecureImage'
 import './SpecialDishes.css'
 
 const SpecialDishes = () => {
@@ -50,10 +51,9 @@ const SpecialDishes = () => {
     addToCart(productId, 1)
   }
 
-  // Build image URL from product's images array
   const getProductImage = (product) => {
     if (product.images && product.images.length > 0) {
-      return ProductService.getImageUrl(product.images[0].id)
+      return ProductService.getImageUrl(product.images[0].imageId || product.images[0].id)
     }
     return '/images/fattoush_salad_1777635117801.png' // fallback
   }
@@ -140,7 +140,7 @@ const SpecialDishes = () => {
                 >
                   <FiHeart />
                 </button>
-                <img
+                <SecureImage
                   src={getProductImage(product)}
                   alt={product.name}
                   className="dish-card__image"

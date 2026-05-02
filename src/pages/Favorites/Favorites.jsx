@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { FiHeart, FiTrash2, FiShoppingCart, FiArrowLeft } from 'react-icons/fi'
 import { useFavorites } from '../../context/FavoritesContext'
 import { useCart } from '../../context/CartContext'
+import SecureImage from '../../components/SecureImage/SecureImage'
 import './Favorites.css'
 
 const Favorites = () => {
@@ -60,7 +61,7 @@ const Favorites = () => {
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div className="favorite-card__image-wrapper">
-                  <img
+                  <SecureImage
                     src={item.image}
                     alt={item.name}
                     className="favorite-card__image"
