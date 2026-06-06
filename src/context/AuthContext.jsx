@@ -38,6 +38,21 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true)
   const isAuthenticated = !!token
 
+  const fetchUserDetails = async (userId) => {
+    try {
+      const response = await api.get(`/users/${userId}/user`)
+      if (response.data && response.data.data) {
+        const fullUser = response.data.data
+        localStorage.setItem('user', JSON.stringify(fullUser))
+        setUser(fullUser)
+        return fullUser
+      }
+    } catch (error) {
+      console.error('Error fetching user details:', error)
+    }
+    return null
+  }
+
   // Initialize user from localStorage
   useEffect(() => {
     const savedToken = localStorage.getItem('token')
@@ -63,6 +78,7 @@ export const AuthProvider = ({ children }) => {
 
       if (parsed) {
         setUser(parsed)
+        fetchUserDetails(parsed.id)
       }
     } else {
       localStorage.removeItem('token')
@@ -125,9 +141,21 @@ export const AuthProvider = ({ children }) => {
       console.log('Saving user data:', userData)
 
       localStorage.setItem('token', jwtToken)
-      localStorage.setItem('user', JSON.stringify(userData))
-
       setToken(jwtToken)
+
+      // Fetch full user details to populate address and profile picture
+      try {
+        const userDetailsResponse = await api.get(`/users/${userData.id}/user`, {
+          headers: { Authorization: `Bearer ${jwtToken}` }
+        })
+        if (userDetailsResponse.data?.data) {
+          userData = userDetailsResponse.data.data
+        }
+      } catch (err) {
+        console.error('Failed to fetch user details during login:', err)
+      }
+
+      localStorage.setItem('user', JSON.stringify(userData))
       setUser(userData)
 
       toast.success('Login successful!')
@@ -172,6 +200,7 @@ export const AuthProvider = ({ children }) => {
         login,
         register,
         logout,
+        fetchUserDetails,
       }}
     >
       {children}

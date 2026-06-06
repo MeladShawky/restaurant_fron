@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
-import { FiMail, FiLock, FiUser, FiEye, FiEyeOff, FiArrowRight } from 'react-icons/fi'
+import { FiMail, FiLock, FiUser, FiEye, FiEyeOff, FiArrowRight, FiMapPin, FiCamera, FiPhone } from 'react-icons/fi'
+import ImageService from '../../api/imageService'
 import './Auth.css'
 
 const Auth = () => {
   const navigate = useNavigate()
-  const { login, register } = useAuth()
+  const { login, register, fetchUserDetails } = useAuth()
   const [isLogin, setIsLogin] = useState(true)
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -17,7 +18,19 @@ const Auth = () => {
     lastName: '',
     email: '',
     password: '',
+    address: '',
+    phone: '',
   })
+  const [profileImage, setProfileImage] = useState(null)
+  const [imagePreviewUrl, setImagePreviewUrl] = useState('')
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      setProfileImage(file)
+      setImagePreviewUrl(URL.createObjectURL(file))
+    }
+  }
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -32,10 +45,30 @@ const Auth = () => {
   const handleRegister = async (e) => {
     e.preventDefault()
     setLoading(true)
-    const result = await register(registerForm)
+    const result = await register({
+      firstName: registerForm.firstName,
+      lastName: registerForm.lastName,
+      email: registerForm.email,
+      password: registerForm.password,
+      address: registerForm.address,
+      phone: registerForm.phone,
+    })
     if (result.success) {
-      setIsLogin(true)
-      setRegisterForm({ firstName: '', lastName: '', email: '', password: '' })
+      const loginResult = await login(registerForm.email, registerForm.password)
+      if (loginResult.success) {
+        if (profileImage) {
+          const userObj = JSON.parse(localStorage.getItem('user'))
+          if (userObj?.id) {
+            try {
+              await ImageService.uploadProfileImage(profileImage, userObj.id)
+              await fetchUserDetails(userObj.id)
+            } catch (err) {
+              console.error('Failed to upload profile image:', err)
+            }
+          }
+        }
+        navigate('/')
+      }
     }
     setLoading(false)
   }
@@ -141,6 +174,30 @@ const Auth = () => {
             <h2 className="auth-card__title">Create Account</h2>
             <p className="auth-card__subtitle">Join us for delicious meals</p>
 
+            {/* Avatar Upload */}
+            <div className="auth-avatar-upload">
+              <div className="auth-avatar-preview" onClick={() => document.getElementById('avatar-input').click()}>
+                {imagePreviewUrl ? (
+                  <img src={imagePreviewUrl} alt="Avatar Preview" className="auth-avatar-img" />
+                ) : (
+                  <div className="auth-avatar-placeholder">
+                    <FiCamera />
+                    <span>Add Photo</span>
+                  </div>
+                )}
+                <div className="auth-avatar-overlay">
+                  <span>Change</span>
+                </div>
+              </div>
+              <input
+                type="file"
+                id="avatar-input"
+                accept="image/*"
+                onChange={handleImageChange}
+                style={{ display: 'none' }}
+              />
+            </div>
+
             <div className="auth-input-row">
               <div className="auth-input-group">
                 <FiUser className="auth-input-group__icon" />
@@ -178,6 +235,32 @@ const Auth = () => {
                 onChange={(e) => setRegisterForm({ ...registerForm, email: e.target.value })}
                 required
                 id="register-email"
+              />
+            </div>
+
+            <div className="auth-input-group">
+              <FiMapPin className="auth-input-group__icon" />
+              <input
+                type="text"
+                placeholder="Delivery Address"
+                className="auth-input"
+                value={registerForm.address}
+                onChange={(e) => setRegisterForm({ ...registerForm, address: e.target.value })}
+                required
+                id="register-address"
+              />
+            </div>
+
+            <div className="auth-input-group">
+              <FiPhone className="auth-input-group__icon" />
+              <input
+                type="tel"
+                placeholder="Phone Number"
+                className="auth-input"
+                value={registerForm.phone}
+                onChange={(e) => setRegisterForm({ ...registerForm, phone: e.target.value })}
+                required
+                id="register-phone"
               />
             </div>
 

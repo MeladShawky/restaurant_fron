@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext'
 import { useCart } from '../../context/CartContext'
 import { useFavorites } from '../../context/FavoritesContext'
 import { useTheme } from '../../context/ThemeContext'
+import SecureImage from '../SecureImage/SecureImage'
 import './Navbar.css'
 
 const Navbar = ({ onCartClick }) => {
@@ -98,7 +99,15 @@ const Navbar = ({ onCartClick }) => {
                 id="user-menu-btn"
               >
                 <div className="navbar__user-avatar">
-                  {user?.firstName?.charAt(0) || 'U'}
+                  {user?.profileImage?.downloadUrl ? (
+                    <SecureImage
+                      src={user.profileImage.downloadUrl}
+                      alt={`${user.firstName} ${user.lastName}`}
+                      className="navbar__user-avatar-img"
+                    />
+                  ) : (
+                    user?.firstName?.charAt(0) || 'U'
+                  )}
                 </div>
               </button>
 
