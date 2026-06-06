@@ -3,7 +3,7 @@
    ============================================ */
 
 .testimonials {
-  background: var(--color-white);
+  background: var(--color-bg-section);
   overflow: hidden;
 }
 
@@ -21,47 +21,86 @@
   justify-content: center;
 }
 
-.testimonials__image-wrapper {
+.testimonials__portal {
   position: relative;
-  width: 400px;
-  height: 450px;
+  width: 320px;
+  height: 360px;
+  margin-top: 60px;
+  /* Space for head and spoon to pop out */
+  margin-bottom: 20px;
+  z-index: 1;
 }
 
-.testimonials__image-bg {
+.testimonials__arch-bg {
   position: absolute;
-  bottom: 0;
-  left: 10%;
-  width: 80%;
-  height: 75%;
-  border-radius: var(--radius-2xl) var(--radius-2xl) var(--radius-2xl) var(--radius-2xl);
-  background: linear-gradient(180deg, var(--color-primary-bg-light) 0%, var(--color-primary-bg) 100%);
-}
-
-.testimonials__image {
-  position: relative;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  z-index: 2;
-  filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.08));
+  border-radius: 160px 160px 30px 30px;
+  /* Tombstone arch shape */
+  background: var(--color-primary);
+  /* Uses global green #53EC62 */
+  overflow: hidden;
+  /* Clips the bottom of the chef */
+  z-index: 1;
 }
 
-.testimonials__image-label {
+.testimonials__chef-image {
   position: absolute;
-  bottom: 20px;
+  bottom: 0px;
+  /* Align to bottom of arch */
   left: 50%;
   transform: translateX(-50%);
-  background: var(--color-white);
-  padding: 0.5rem 1.5rem;
-  border-radius: var(--radius-full);
-  box-shadow: var(--shadow-md);
-  z-index: 3;
-  white-space: nowrap;
+  width: 440px;
+  /* Wider than the 320px arch */
+  height: auto;
+  z-index: 1;
+  object-fit: contain;
 }
 
-.testimonials__image-label span {
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-semibold);
+.testimonials__chef-image--top {
+  z-index: 2;
+  /* Clip bottom 20% to hide the flat cut and let the arch do the cropping */
+  clip-path: inset(-150px -150px 20% -150px);
+}
+
+.testimonials__emoji {
+  position: absolute;
+  font-size: 1.8rem;
+  z-index: 3;
+  animation: float 3s ease-in-out infinite;
+}
+
+.testimonials__emoji--left {
+  top: 60%;
+  left: -20px;
+  animation-delay: 0s;
+}
+
+.testimonials__emoji--right {
+  top: 50%;
+  right: -15px;
+  animation-delay: 1.5s;
+}
+
+.testimonials__chef-badge {
+  position: absolute;
+  bottom: -15px;
+  right: -30px;
+  background: var(--color-surface);
+  padding: 0.8rem 1.2rem;
+  border-radius: 0 20px 20px 20px; /* Tail at top-left */
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.testimonials__chef-badge span {
+  font-size: 1rem;
+  font-weight: var(--fw-bold);
   color: var(--color-text);
 }
 

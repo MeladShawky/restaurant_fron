@@ -39,7 +39,7 @@
 
 /* Service Card */
 .service-card {
-  background: var(--color-white);
+  background: var(--color-surface);
   padding: var(--spacing-xl);
   border-radius: var(--radius-2xl);
   text-align: center;

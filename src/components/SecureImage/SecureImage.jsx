@@ -20,7 +20,7 @@ const SecureImage = ({ src, alt, className, fallback = '/images/fattoush_salad_1
       }
 
       // If it's a local fallback image, a relative path, or data URI, just use it directly
-      if (src.startsWith('/images/') || src.startsWith('data:')) {
+      if ((src.startsWith('/') && !src.includes('/api/v1/')) || src.startsWith('data:') || src.startsWith('blob:')) {
         if (isMounted) {
           setImageSrc(src)
           setLoading(false)

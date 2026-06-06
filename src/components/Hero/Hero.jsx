@@ -37,29 +37,55 @@ const Hero = () => {
 
         {/* Right Content - Hero Image */}
         <div className="hero__visual">
-          <div className="hero__image-wrapper">
-            <div className="hero__image-bg"></div>
+          <div className="hero__image-portal">
+            <div className="hero__image-bg-circle">
+              <img
+                src="/images/hero_girl_1777635170749.png"
+                alt="Enjoying delicious food"
+                className="hero__girl-image"
+              />
+            </div>
             <img
               src="/images/hero_girl_1777635170749.png"
               alt="Enjoying delicious food"
-              className="hero__image"
+              className="hero__girl-image hero__girl-image--top"
             />
           </div>
 
+
+          {/* Floating Bubble */}
+          <div className="hero__bubble">
+            <span className="hero__bubble-text">Hot spicy Food 🌶️</span>
+          </div>
+
           {/* Floating Food Cards */}
-          <div className="hero__food-card hero__food-card--top">
+          <div className="hero__food-card hero__food-card--left">
             <img src="/images/spicy_noodles_1777635202985.png" alt="Spicy noodles" className="hero__food-card-img" />
             <div className="hero__food-card-info">
               <span className="hero__food-card-name">Spicy noodles</span>
-              <span className="hero__food-card-price">$18.00</span>
+              <div className="hero__food-card-stars">
+                <FiStar fill="#FFC107" color="#FFC107" />
+                <FiStar fill="#FFC107" color="#FFC107" />
+                <FiStar fill="#FFC107" color="#FFC107" />
+                <FiStar color="#D1D5DB" />
+                <FiStar color="#D1D5DB" />
+              </div>
+              <span className="hero__food-card-price"><span className="hero__price-symbol">$</span>18.00</span>
             </div>
           </div>
 
-          <div className="hero__food-card hero__food-card--bottom">
-            <img src="/images/veg_noodles_1777635218378.png" alt="Vegetarian noodle" className="hero__food-card-img" />
+          <div className="hero__food-card hero__food-card--right">
+            <img src="/images/vegetable_salad_1777635139884.png" alt="Vegetarian salad" className="hero__food-card-img" />
             <div className="hero__food-card-info">
-              <span className="hero__food-card-name">Vegetarian noodle</span>
-              <span className="hero__food-card-price">$23.00</span>
+              <span className="hero__food-card-name">Vegetarian salad</span>
+              <div className="hero__food-card-stars">
+                <FiStar fill="#FFC107" color="#FFC107" />
+                <FiStar fill="#FFC107" color="#FFC107" />
+                <FiStar fill="#FFC107" color="#FFC107" />
+                <FiStar fill="#FFC107" color="#FFC107" />
+                <FiStar color="#D1D5DB" />
+              </div>
+              <span className="hero__food-card-price"><span className="hero__price-symbol">$</span>23.00</span>
             </div>
           </div>
         </div>

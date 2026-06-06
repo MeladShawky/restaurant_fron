@@ -8,15 +8,26 @@ const Testimonials = () => {
       <div className="container testimonials__container">
         {/* Left - Chef Image */}
         <div className="testimonials__image-side">
-          <div className="testimonials__image-wrapper">
-            <div className="testimonials__image-bg"></div>
+          <div className="testimonials__portal">
+            <div className="testimonials__arch-bg">
+              <img
+                src="/images/chef_portrait_1777635185584.png"
+                alt="Our chef"
+                className="testimonials__chef-image"
+              />
+            </div>
             <img
               src="/images/chef_portrait_1777635185584.png"
               alt="Our chef"
-              className="testimonials__image"
+              className="testimonials__chef-image testimonials__chef-image--top"
             />
-            <div className="testimonials__image-label">
-              <span>Our Best Chef</span>
+            
+            {/* Emojis */}
+            <div className="testimonials__emoji testimonials__emoji--left">😋</div>
+            <div className="testimonials__emoji testimonials__emoji--right">🍕</div>
+
+            <div className="testimonials__chef-badge">
+              <span>Our Best Chef 😁</span>
             </div>
           </div>
         </div>

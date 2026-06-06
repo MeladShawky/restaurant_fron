@@ -3,7 +3,7 @@
    ============================================ */
 
 .categories {
-  background: var(--color-white);
+  background: var(--color-bg);
 }
 
 .categories__header {
@@ -25,7 +25,7 @@
   text-align: center;
   padding: var(--spacing-2xl) var(--spacing-lg);
   border-radius: var(--radius-2xl);
-  background: var(--color-white);
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
   transition: all var(--transition-base);
   cursor: pointer;

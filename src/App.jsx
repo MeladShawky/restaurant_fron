@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import { AuthProvider } from './context/AuthContext'
 import { CartProvider } from './context/CartContext'
 import { FavoritesProvider } from './context/FavoritesContext'
+import { ThemeProvider } from './context/ThemeContext'
 
 import Navbar from './components/Navbar/Navbar'
 import Hero from './components/Hero/Hero'
@@ -35,42 +36,44 @@ function App() {
 
   return (
     <Router>
-      <AuthProvider>
-        <CartProvider>
-          <FavoritesProvider>
-            <div className="app">
-              <Navbar onCartClick={() => setIsCartOpen(true)} />
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/login" element={<Auth />} />
-                <Route path="/orders" element={<Orders />} />
-                <Route path="/favorites" element={<Favorites />} />
-              </Routes>
-              <Footer />
+      <ThemeProvider>
+        <AuthProvider>
+          <CartProvider>
+            <FavoritesProvider>
+              <div className="app">
+                <Navbar onCartClick={() => setIsCartOpen(true)} />
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/login" element={<Auth />} />
+                  <Route path="/orders" element={<Orders />} />
+                  <Route path="/favorites" element={<Favorites />} />
+                </Routes>
+                <Footer />
 
-              {/* Cart Drawer */}
-              <CartDrawer
-                isOpen={isCartOpen}
-                onClose={() => setIsCartOpen(false)}
-              />
+                {/* Cart Drawer */}
+                <CartDrawer
+                  isOpen={isCartOpen}
+                  onClose={() => setIsCartOpen(false)}
+                />
 
-              {/* Toast Notifications */}
-              <ToastContainer
-                position="bottom-right"
-                autoClose={3000}
-                hideProgressBar={false}
-                newestOnTop
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="colored"
-              />
-            </div>
-          </FavoritesProvider>
-        </CartProvider>
-      </AuthProvider>
+                {/* Toast Notifications */}
+                <ToastContainer
+                  position="bottom-right"
+                  autoClose={3000}
+                  hideProgressBar={false}
+                  newestOnTop
+                  closeOnClick
+                  rtl={false}
+                  pauseOnFocusLoss
+                  draggable
+                  pauseOnHover
+                  theme="colored"
+                />
+              </div>
+            </FavoritesProvider>
+          </CartProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </Router>
   )
 }

@@ -32,7 +32,7 @@
   justify-content: center;
   font-size: var(--fs-lg);
   color: var(--color-text-light);
-  background: var(--color-white);
+  background: var(--color-surface);
   transition: all var(--transition-base);
 }
 
@@ -52,7 +52,7 @@
 
 /* Dish Card */
 .dish-card {
-  background: var(--color-white);
+  background: var(--color-surface);
   border-radius: var(--radius-2xl);
   overflow: hidden;
   transition: all var(--transition-base);
@@ -84,7 +84,7 @@
   width: 36px;
   height: 36px;
   border-radius: var(--radius-full);
-  background: var(--color-white);
+  background: var(--color-surface);
   display: flex;
   align-items: center;
   justify-content: center;
