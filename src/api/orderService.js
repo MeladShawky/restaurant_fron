@@ -1,10 +1,14 @@
 import api from './axios'
 
 const OrderService = {
-  /** POST /orders/order?userId={userId} — place a new order */
-  placeOrder: async (userId) => {
+  /** POST /orders/order?userId={userId}&promoCode={promoCode} — place a new order */
+  placeOrder: async (userId, promoCode) => {
+    const params = { userId }
+    if (promoCode) {
+      params.promoCode = promoCode
+    }
     const response = await api.post('/orders/order', null, {
-      params: { userId },
+      params,
     })
     return response.data
   },

@@ -14,11 +14,89 @@ const CartDrawer = ({ isOpen, onClose }) => {
   const [placingOrder, setPlacingOrder] = useState(false)
   const [orderSuccess, setOrderSuccess] = useState(false)
 
+  // Promo code states
+  const [promoInput, setPromoInput] = useState('')
+  const [appliedPromo, setAppliedPromo] = useState(null)
+  const [promoError, setPromoError] = useState('')
+  const [promoSuccess, setPromoSuccess] = useState('')
+
   const getItemImage = (item) => {
     if (item.product?.images && item.product.images.length > 0) {
       return ProductService.getImageUrl(item.product.images[0].imageId || item.product.images[0].id)
     }
     return '/images/fattoush_salad_1777635117801.png'
+  }
+
+  // Live Calculations
+  const subtotal = totalAmount || 0
+  let deliveryFee = 3.99
+  let discount = 0
+
+  if (appliedPromo === 'MEGA20') {
+    if (subtotal >= 500) {
+      discount = subtotal * 0.2
+    }
+  } else if (appliedPromo === 'FIRST15') {
+    discount = subtotal * 0.15
+  } else if (appliedPromo === 'FEAST10') {
+    if (subtotal >= 60) {
+      discount = 10.00
+    }
+  }
+
+  const finalTotal = subtotal + deliveryFee - discount
+
+  const handleApplyPromo = async () => {
+    const code = promoInput.trim().toUpperCase()
+    setPromoError('')
+    setPromoSuccess('')
+
+    if (code === 'MEGA20') {
+      if (subtotal >= 500) {
+        setAppliedPromo('MEGA20')
+        setPromoSuccess('MEGA20 applied! 20% off your entire order.')
+        toast.success('Promo code MEGA20 applied!')
+      } else {
+        setPromoError('MEGA20 requires a minimum subtotal of $500.00.')
+      }
+    } else if (code === 'FIRST15') {
+      if (!user?.id) {
+        setPromoError('Please login to apply this promo code.')
+        return
+      }
+      try {
+        const response = await OrderService.getUserOrders(user.id)
+        const orders = response?.data || response || []
+        if (orders.length === 0) {
+          setAppliedPromo('FIRST15')
+          setPromoSuccess('FIRST15 applied! 15% discount on your first order.')
+          toast.success('Promo code FIRST15 applied!')
+        } else {
+          setPromoError('FIRST15 is only valid for your first order.')
+        }
+      } catch (error) {
+        console.error('Error verifying order history:', error)
+        setPromoError('Failed to verify your order history. Please try again.')
+      }
+    } else if (code === 'FEAST10') {
+      if (subtotal >= 60) {
+        setAppliedPromo('FEAST10')
+        setPromoSuccess('FEAST10 applied! Flat $10.00 off your order.')
+        toast.success('Promo code FEAST10 applied!')
+      } else {
+        setPromoError('FEAST10 requires a minimum subtotal of $60.00.')
+      }
+    } else {
+      setPromoError('Invalid promo code. Try MEGA20, FIRST15, or FEAST10.')
+    }
+  }
+
+  const handleRemovePromo = () => {
+    setAppliedPromo(null)
+    setPromoInput('')
+    setPromoSuccess('')
+    setPromoError('')
+    toast.info('Promo code removed.')
   }
 
   const handlePlaceOrder = async () => {
@@ -33,9 +111,13 @@ const CartDrawer = ({ isOpen, onClose }) => {
 
     setPlacingOrder(true)
     try {
-      await OrderService.placeOrder(user.id)
+      await OrderService.placeOrder(user.id, appliedPromo)
       setOrderSuccess(true)
       clearCart()
+      setAppliedPromo(null)
+      setPromoInput('')
+      setPromoSuccess('')
+      setPromoError('')
       toast.success('Order placed successfully! 🎉')
 
       // Reset success state after animation
@@ -50,7 +132,6 @@ const CartDrawer = ({ isOpen, onClose }) => {
       if (status === 401) {
         toast.error('Session expired. Please log in again.')
       } else {
-        // Backend ApiResponse has { message, data } — message holds the error
         const msg = error.response?.data?.message || error.response?.data || 'Failed to place order. Please try again.'
         toast.error(msg)
       }
@@ -145,10 +226,65 @@ const CartDrawer = ({ isOpen, onClose }) => {
             {/* Footer */}
             {cartItems.length > 0 && (
               <div className="cart-drawer__footer">
+                {/* Promo Code Input */}
+                <div className="cart-drawer__promo">
+                  <input
+                    type="text"
+                    placeholder="Promo Code"
+                    value={promoInput}
+                    onChange={(e) => {
+                      setPromoInput(e.target.value.toUpperCase())
+                      setPromoError('')
+                    }}
+                    disabled={appliedPromo !== null}
+                    className="cart-drawer__promo-input"
+                  />
+                  {appliedPromo ? (
+                    <button
+                      className="btn btn-outline cart-drawer__promo-btn cart-drawer__promo-btn--remove"
+                      onClick={handleRemovePromo}
+                    >
+                      Remove
+                    </button>
+                  ) : (
+                    <button
+                      className="btn btn-primary cart-drawer__promo-btn"
+                      onClick={handleApplyPromo}
+                      disabled={!promoInput.trim()}
+                    >
+                      Apply
+                    </button>
+                  )}
+                </div>
+                {promoError && <p className="cart-drawer__promo-error">{promoError}</p>}
+                {promoSuccess && <p className="cart-drawer__promo-success">{promoSuccess}</p>}
+
+                <div className="cart-drawer__divider"></div>
+
+                {/* Detailed Receipt Breakdown */}
+                <div className="cart-drawer__breakdown">
+                  <div className="cart-drawer__breakdown-row">
+                    <span>Subtotal</span>
+                    <span>${Number(subtotal).toFixed(2)}</span>
+                  </div>
+                  {discount > 0 && (
+                    <div className="cart-drawer__breakdown-row cart-drawer__breakdown-row--discount">
+                      <span>Promo Discount</span>
+                      <span>-${Number(discount).toFixed(2)}</span>
+                    </div>
+                  )}
+                  <div className="cart-drawer__breakdown-row">
+                    <span>Delivery Fee</span>
+                    <span>{deliveryFee === 0 ? 'Free' : `$${Number(deliveryFee).toFixed(2)}`}</span>
+                  </div>
+                </div>
+
+                <div className="cart-drawer__divider"></div>
+
                 <div className="cart-drawer__total">
                   <span>Total</span>
                   <span className="cart-drawer__total-amount">
-                    ${Number(totalAmount || 0).toFixed(2)}
+                    ${Number(finalTotal).toFixed(2)}
                   </span>
                 </div>
                 <button

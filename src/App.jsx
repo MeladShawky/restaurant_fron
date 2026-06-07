@@ -12,6 +12,7 @@ import Navbar from './components/Navbar/Navbar'
 import Hero from './components/Hero/Hero'
 import Categories from './components/Categories/Categories'
 import SpecialDishes from './components/SpecialDishes/SpecialDishes'
+import Offers from './components/Offers/Offers'
 import Testimonials from './components/Testimonials/Testimonials'
 import OurStory from './components/OurStory/OurStory'
 import Footer from './components/Footer/Footer'
@@ -27,6 +28,7 @@ const HomePage = () => (
     <Hero />
     <Categories />
     <SpecialDishes />
+    <Offers />
     <Testimonials />
     <OurStory />
   </>
