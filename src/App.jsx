@@ -16,6 +16,7 @@ import Testimonials from './components/Testimonials/Testimonials'
 import OurStory from './components/OurStory/OurStory'
 import Footer from './components/Footer/Footer'
 import CartDrawer from './components/CartDrawer/CartDrawer'
+import SearchOverlay from './components/SearchOverlay/SearchOverlay'
 import Auth from './pages/Auth/Auth'
 import Orders from './pages/Orders/Orders'
 import Favorites from './pages/Favorites/Favorites'
@@ -33,6 +34,7 @@ const HomePage = () => (
 
 function App() {
   const [isCartOpen, setIsCartOpen] = useState(false)
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
 
   return (
     <Router>
@@ -41,7 +43,10 @@ function App() {
           <CartProvider>
             <FavoritesProvider>
               <div className="app">
-                <Navbar onCartClick={() => setIsCartOpen(true)} />
+                <Navbar 
+                  onCartClick={() => setIsCartOpen(true)} 
+                  onSearchClick={() => setIsSearchOpen(true)} 
+                />
                 <Routes>
                   <Route path="/" element={<HomePage />} />
                   <Route path="/login" element={<Auth />} />
@@ -54,6 +59,12 @@ function App() {
                 <CartDrawer
                   isOpen={isCartOpen}
                   onClose={() => setIsCartOpen(false)}
+                />
+
+                {/* Search Overlay */}
+                <SearchOverlay
+                  isOpen={isSearchOpen}
+                  onClose={() => setIsSearchOpen(false)}
                 />
 
                 {/* Toast Notifications */}

@@ -8,7 +8,7 @@ import { useTheme } from '../../context/ThemeContext'
 import SecureImage from '../SecureImage/SecureImage'
 import './Navbar.css'
 
-const Navbar = ({ onCartClick }) => {
+const Navbar = ({ onCartClick, onSearchClick }) => {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [showUserMenu, setShowUserMenu] = useState(false)
@@ -75,7 +75,12 @@ const Navbar = ({ onCartClick }) => {
           >
             {theme === 'light' ? <FiMoon /> : <FiSun />}
           </button>
-          <button className="navbar__icon-btn" id="search-btn" aria-label="Search">
+          <button 
+            className="navbar__icon-btn" 
+            id="search-btn" 
+            aria-label="Search"
+            onClick={onSearchClick}
+          >
             <FiSearch />
           </button>
           <Link to="/favorites" className="navbar__icon-btn navbar__fav-btn" id="favorites-btn" aria-label="Favorites">
