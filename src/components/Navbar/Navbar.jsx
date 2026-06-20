@@ -67,17 +67,17 @@ const Navbar = ({ onCartClick, onSearchClick }) => {
         </ul>
 
         <div className="navbar__actions">
-          <button 
-            className="navbar__icon-btn theme-toggle-btn" 
-            id="theme-toggle-btn" 
-            onClick={toggleTheme} 
+          <button
+            className="navbar__icon-btn theme-toggle-btn"
+            id="theme-toggle-btn"
+            onClick={toggleTheme}
             aria-label="Toggle theme"
           >
             {theme === 'light' ? <FiMoon /> : <FiSun />}
           </button>
-          <button 
-            className="navbar__icon-btn" 
-            id="search-btn" 
+          <button
+            className="navbar__icon-btn"
+            id="search-btn"
             aria-label="Search"
             onClick={onSearchClick}
           >
